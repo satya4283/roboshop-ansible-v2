@@ -1,25 +1,12 @@
-- name: app setup
+- name: application setup
   include_role:
     name: common
     tasks_from: app-setup 
 
-
-# - name: disable default nodjs  
-#   command: dnf module disable nodejs -y
-
-# - name: Enable nodjs24
-#   command: dnf module enable nodejs:24 -y
-
-# - name: Instll nodjs 
-#   dnf:
-#     name: nodejs 
-#     state: present
-
-
-# - name: Install dependepcies 
-#   community.general.npm:
-#     path: /app
-#     state: present
+- name: nodejs setup
+  include_role:
+    name: common
+    tasks_from: nodejs 
 
 # - name: copy catalogue service 
 #   template:

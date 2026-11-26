@@ -1,0 +1,16 @@
+- name: disable default nodjs  
+  command: dnf module disable nodejs -y
+
+- name: Enable nodjs24
+  command: dnf module enable nodejs:24 -y
+
+- name: Instll nodjs 
+  dnf:
+    name: nodejs 
+    state: present
+
+
+- name: Install dependepcies 
+  community.general.npm:
+    path: /app
+    state: present
