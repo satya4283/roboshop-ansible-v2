@@ -9,9 +9,6 @@ rabbitmq_password: "{{ vault_rabbitmq_password }}"
 shipping_db_user: "{{ vault_shipping_db_user }}"
 shipping_db_password: "{{ vault_shipping_db_password }}"
 
-# shipping_db_user: shipping 
-# shipping_db_password: RoboShop@1
-
 
 
 mongodb_host: mongodb.daws92ss.store
