@@ -37,7 +37,7 @@
   when: product_count.stdout | int  == 0
 
 
-- name: restart {{ component }}
+- name: restart application
   include_role:
     name: common
     tasks_from: restart 
