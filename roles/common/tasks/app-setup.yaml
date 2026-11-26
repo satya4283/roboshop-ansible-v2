@@ -12,9 +12,9 @@
     path: /app
     state: absent
 
-- name: Remove catalogue.zip 
+- name: Remove {{ component }}.zip 
   file:
-    path: /tmp/catalogue.zip
+    path: /tmp/{{ component }}.zip
     state: absent
 
 - name: create app directory
@@ -22,13 +22,13 @@
     path: /app
     state: directory
 
-- name: Download catalogue application
+- name: Download {{ component }} application
   get_url:
-    url: https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/catalogue-v4.zip
-    dest: /tmp/catalogue.zip
+    url: https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/{{ component }}-v4.zip
+    dest: /tmp/{{ component }}.zip
 
-- name: Unzip catalogue 
+- name: Unzip {{ component }} 
   unarchive:
-    src: /tmp/catalogue.zip
+    src: /tmp/{{ component }}.zip
     dest: /app
     remote_src: yes

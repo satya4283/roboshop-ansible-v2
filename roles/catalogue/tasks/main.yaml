@@ -8,39 +8,36 @@
     name: common
     tasks_from: nodejs 
 
-# - name: copy catalogue service 
-#   template:
-#     src: catalogue.service.j2
-#     dest: /etc/systemd/system/catalogue.service
+-  name: systemd setup 
+   include_role:
+    name: common
+    tasks_from: systemd-setup
 
-# - name: copy mongo repo 
-#   copy:
-#     src: mongo.repo
-#     dest: /etc/yum.repos.d/mongo.repo
 
-# - name: Install mongodb client 
-#   package:
-#     name: mongodb-mongosh
-#     state: present 
+- name: copy mongo repo 
+  copy:
+    src: mongo.repo
+    dest: /etc/yum.repos.d/mongo.repo
 
-# - name: check product count 
-#   command: mongosh --host "{{ mongodb_host }}" --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()'
-#   register: product_count 
+- name: Install mongodb client 
+  package:
+    name: mongodb-mongosh
+    state: present 
 
-# - name: print product count 
-#   debug:
-#     msg: "{{ product_count }}"
+- name: check product count 
+  command: mongosh --host "{{ mongodb_host }}" --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()'
+  register: product_count 
 
-# - name: load product data 
-#   shell: mongosh --host "{{ mongodb_host }}" </app/db/master-data.js
-#   when: product_count.stdout | int  == 0
+- name: print product count 
+  debug:
+    msg: "{{ product_count }}"
 
-# - name: demon reload 
-#   systemd_service:
-#     daemon_reload: true
+- name: load product data 
+  shell: mongosh --host "{{ mongodb_host }}" </app/db/master-data.js
+  when: product_count.stdout | int  == 0
 
-# - name: start and enable catalogue 
-#   service:
-#     name: catalogue 
-#     state: restarted
-#     enabled: yes
+
+- name: restart {{ component }}
+  include_role:
+    name: common
+    tasks_from: restart 
