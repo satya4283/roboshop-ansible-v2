@@ -1,3 +1,7 @@
+- name: print varibales
+  debug:
+    msg: "Course: {{ course }}, duration: {{ duration }}, trainer: {{ trainer }}"
+
 - name: application setup
   include_role:
     name: common
