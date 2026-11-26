@@ -1,87 +1,59 @@
-- name: disable default nodjs  
-  command: dnf module disable nodejs -y
+- name: app setup
+  include_role:
+    name: common
+    tasks_from: app-setup 
 
-- name: Enable nodjs24
-  command: dnf module enable nodejs:24 -y
 
-- name: Instll nodjs 
-  dnf:
-    name: nodejs 
-    state: present
+# - name: disable default nodjs  
+#   command: dnf module disable nodejs -y
 
-- name: create roboshop system user 
-  user:
-    name: roboshop
-    create_home: false
-    home: /app 
-    shell: /sbin/nologin
-    system: true 
-    comment: "roboshop system user"
+# - name: Enable nodjs24
+#   command: dnf module enable nodejs:24 -y
 
-- name: Remove existing app directory
-  file:
-    path: /app
-    state: absent
+# - name: Instll nodjs 
+#   dnf:
+#     name: nodejs 
+#     state: present
 
-- name: Remove catalogue.zip 
-  file:
-    path: /tmp/catalogue.zip
-    state: absent
 
-- name: create app directory
-  file:
-    path: /app
-    state: directory
+# - name: Install dependepcies 
+#   community.general.npm:
+#     path: /app
+#     state: present
 
-- name: Download catalogue application
-  get_url:
-    url: https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/catalogue-v4.zip
-    dest: /tmp/catalogue.zip
+# - name: copy catalogue service 
+#   template:
+#     src: catalogue.service.j2
+#     dest: /etc/systemd/system/catalogue.service
 
-- name: Unzip catalogue 
-  unarchive:
-    src: /tmp/catalogue.zip
-    dest: /app
-    remote_src: yes
+# - name: copy mongo repo 
+#   copy:
+#     src: mongo.repo
+#     dest: /etc/yum.repos.d/mongo.repo
 
-- name: Install dependepcies 
-  community.general.npm:
-    path: /app
-    state: present
+# - name: Install mongodb client 
+#   package:
+#     name: mongodb-mongosh
+#     state: present 
 
-- name: copy catalogue service 
-  template:
-    src: catalogue.service.j2
-    dest: /etc/systemd/system/catalogue.service
+# - name: check product count 
+#   command: mongosh --host "{{ mongodb_host }}" --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()'
+#   register: product_count 
 
-- name: copy mongo repo 
-  copy:
-    src: mongo.repo
-    dest: /etc/yum.repos.d/mongo.repo
+# - name: print product count 
+#   debug:
+#     msg: "{{ product_count }}"
 
-- name: Install mongodb client 
-  package:
-    name: mongodb-mongosh
-    state: present 
+# - name: load product data 
+#   shell: mongosh --host "{{ mongodb_host }}" </app/db/master-data.js
+#   when: product_count.stdout | int  == 0
 
-- name: check product count 
-  command: mongosh --host "{{ mongodb_host }}" --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()'
-  register: product_count 
+# - name: demon reload 
+#   systemd_service:
+#     daemon_reload: true
 
-- name: print product count 
-  debug:
-    msg: "{{ product_count }}"
-
-- name: load product data 
-  shell: mongosh --host "{{ mongodb_host }}" </app/db/master-data.js
-  when: product_count.stdout | int  == 0
-
-- name: demon reload 
-  systemd_service:
-    daemon_reload: true
-
-- name: start and enable catalogue 
-  service:
-    name: catalogue 
-    state: restarted
-    enabled: yes
+# - name: start and enable catalogue 
+#   service:
+#     name: catalogue 
+#     state: restarted
+#     enabled: yes
