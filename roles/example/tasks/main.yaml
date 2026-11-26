@@ -1,0 +1,3 @@
+- name: This is dependency role 
+  debug:
+    msg: "Hi from example role as dependency"
